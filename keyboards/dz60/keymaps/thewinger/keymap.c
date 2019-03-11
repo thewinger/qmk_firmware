@@ -152,10 +152,11 @@ void keyboard_post_init_user(void) {
             default:
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
         }
+    #endif
 }
 
 // switch layers depending on keypressed, with persistent layer in the mix
-bool process_record_keymap(uint16t keycode, keyrecord_t *record) {
+bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
     switch (keycode)
     {
         case WIN:
@@ -197,6 +198,7 @@ bool process_record_keymap(uint16t keycode, keyrecord_t *record) {
        default:
             break;
     }
+    return true;
 }
 
 uint32_t layer_state_set_user(uint32_t state) {
@@ -204,22 +206,22 @@ uint32_t layer_state_set_user(uint32_t state) {
         switch (biton32(state)) {
             case _WIN:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
+                rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); // sets mode to Fast breathing without saving
                 break;
 
             case _MAC:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
+                rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
                 break;
 
             default:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
+                rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
                 break;
         }
     #endif // RGBLIGHT_ENABLE
-    return state
+    return state;
 }
