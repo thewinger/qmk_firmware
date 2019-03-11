@@ -20,15 +20,18 @@ enum keycodes {
     WIN = SAFE_RANGE,
     MAC,
     NAVM,
-    LEDS,
-    TD_N,
+    LEDS
+};
+// Tap dance enums
+enum {
+    TD_N = 0,
     TD_C
 };
 
 // Tap dance keys
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_N] = ACTION_TAP_DANCE_DOBLE(KC_N, ES_NTIL),
-    [TD_C] = ACTION_TAP_DANCE_DOBLE(KC_C, ES_CCED)
+    [TD_N] = ACTION_TAP_DANCE_DOUBLE(KC_N, ES_NTIL),
+    [TD_C] = ACTION_TAP_DANCE_DOUBLE(KC_C, ES_CCED)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
