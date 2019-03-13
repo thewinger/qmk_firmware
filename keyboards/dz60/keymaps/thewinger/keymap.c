@@ -153,7 +153,7 @@ void keyboard_post_init_user(void) {
         switch (biton32(eeconfig_read_default_layer())) {
             case _WIN:
                 rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); // sets mode to Fast breathing without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING); // sets mode to Fast breathing without saving
                 break;
 
             case _MAC:
@@ -163,6 +163,7 @@ void keyboard_post_init_user(void) {
 
             default:
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
+                break;
         }
     #endif
 }
@@ -228,10 +229,21 @@ uint32_t layer_state_set_user(uint32_t state) {
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
                 break;
 
+            case _NAVM:
+                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
+                rgblight_sethsv_noeeprom(255, 255, 255); // sets the color to teal/cyan without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                break;
+
+            case _LEDS:
+                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL + 5); // sets mode to Fast breathing without saving
+                break;
+
             default:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
                 rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE + 5); // sets mode to Fast breathing without saving
                 break;
         }
     #endif // RGBLIGHT_ENABLE
