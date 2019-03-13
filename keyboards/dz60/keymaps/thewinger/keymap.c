@@ -96,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_NAVM] = LAYOUT_60_ansi(
         KC_WAKE, KC_F1,   KC_F2,    KC_F3,      KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
         _______, _______, KC_UP,    _______,    _______, _______, _______, _______, _______, _______, _______,  KC_MRWD,    KC_MFFD,    KC_MPLY,
-        _______, KC_LEFT, KC_DOWN,  KC_RIGHT,   _______, _______, _______, _______, _______, _______, KC_VOLD,  KC_VOLU,    KC_MUTE,
+        _______, KC_LEFT, KC_DOWN,  KC_RIGHT,   _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_VOLD,  KC_VOLU,    KC_MUTE,
         _______, _______, _______,  _______,    _______, _______, _______, _______, _______, _______, _______,  _______,
         _______, _______, _______,                      _______,                    _______, _______,           _______,                _______),
 
@@ -168,7 +168,7 @@ void keyboard_post_init_user(void) {
 }
 
 // switch layers depending on keypressed, with persistent layer in the mix
-bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch (keycode)
     {
         case WIN:
@@ -219,7 +219,7 @@ uint32_t layer_state_set_user(uint32_t state) {
             case _WIN:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
                 rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); // sets mode to Fast breathing without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING); // sets mode to Fast breathing without saving
                 break;
 
             case _MAC:
