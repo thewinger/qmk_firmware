@@ -146,12 +146,12 @@ void keyboard_post_init_user(void) {
         rgblight_enable_noeeprom();
         switch (biton32(eeconfig_read_default_layer())) {
             case _WIN:
-                rgblight_sethsv_noeeprom(255, 255, 255): // sets the color to teal/cyan without saving
+                rgblight_sethsv_noeeprom(255, 255, 0): // sets the color to yellow without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); //
                 break;
 
             case _MAC:
-                rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
+                rgblight_sethsv_noeeprom(97, 205, 227): // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); //
                 break;
 
