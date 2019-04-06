@@ -6,7 +6,6 @@
  */
 
 #include QMK_KEYBOARD_H
-#include "keymap_extras/keymap_spanish.h"
 
 enum layers {
   _WIN,
@@ -28,11 +27,6 @@ enum {
     TD_C
 };
 
-// Tap dance keys
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_N] = ACTION_TAP_DANCE_DOUBLE(KC_N, ES_NTIL),
-    [TD_C] = ACTION_TAP_DANCE_DOUBLE(KC_C, ES_CCED)
-};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -54,7 +48,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GESC,            KC_1,   KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,       KC_9,   KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,
         KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
         LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
-        KC_LSFT,            KC_Z,   KC_X,   TD(TD_C),   KC_V,   KC_B,   TD(TD_N),   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,    RSFT_T(KC_UP),
+        KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,            RSFT_T(KC_UP),
         KC_LCTL,  KC_LGUI,  KC_LALT,                     KC_SPC,                    LEDS,     RALT_T(KC_LEFT),    RGUI_T(KC_DOWN),    RCTL_T(KC_RIGHT)),
 
     /* MAC
@@ -75,7 +69,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GESC,            KC_1,   KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,       KC_9,   KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,
         KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
         LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
-        KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,    RSFT_T(KC_UP),
+        KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,        RSFT_T(KC_UP),
         KC_LCTL,  KC_LALT,  KC_LGUI,                     KC_SPC,                    LEDS,     RALT_T(KC_LEFT),    RGUI_T(KC_DOWN),    RCTL_T(KC_RIGHT)),
 
 
@@ -152,17 +146,16 @@ void keyboard_post_init_user(void) {
         rgblight_enable_noeeprom();
         switch (biton32(eeconfig_read_default_layer())) {
             case _WIN:
-                rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING); // sets mode to Fast breathing without saving
+                rgblight_sethsv_noeeprom(255, 255, 255): // sets the color to teal/cyan without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); //
                 break;
 
             case _MAC:
                 rgblight_sethsv_noeeprom(180, 255, 255): // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); //
                 break;
 
             default:
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_GRADIENT);
                 break;
         }
     #endif
@@ -219,20 +212,20 @@ uint32_t layer_state_set_user(uint32_t state) {
         switch (biton32(state)) {
             case _WIN:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING); // sets mode to Fast breathing without saving
+                rgblight_sethsv_noeeprom(255, 255, 0); // sets the color to yellow without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
                 break;
 
             case _MAC:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
+                rgblight_sethsv_noeeprom(93, 205, 227); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
                 break;
 
             case _NAVM:
                 rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(255, 255, 255); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                rgblight_sethsv_noeeprom(93, 205, 227); // sets the color to teal/cyan without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE); // sets mode to Fast breathing without saving
                 break;
 
             case _LEDS:
@@ -241,9 +234,6 @@ uint32_t layer_state_set_user(uint32_t state) {
                 break;
 
             default:
-                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(180, 255, 255); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE + 5); // sets mode to Fast breathing without saving
                 break;
         }
     #endif // RGBLIGHT_ENABLE
