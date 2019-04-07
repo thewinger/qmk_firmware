@@ -6,6 +6,7 @@
  */
 
 #include QMK_KEYBOARD_H
+#include <print.h>
 
 enum layers {
   _WIN,
@@ -19,14 +20,9 @@ enum keycodes {
     WIN = SAFE_RANGE,
     MAC,
     NAVM,
-    LEDS
+    LEDS,
+    EEPROM
 };
-// Tap dance enums
-enum {
-    TD_N = 0,
-    TD_C
-};
-
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -49,7 +45,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
         LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
         KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,            RSFT_T(KC_UP),
-        KC_LCTL,  KC_LGUI,  KC_LALT,                     KC_SPC,                    LEDS,     RALT_T(KC_LEFT),    RGUI_T(KC_DOWN),    RCTL_T(KC_RIGHT)),
+        MAC,  KC_LGUI,  KC_LALT,                     KC_SPC,                    LEDS,     RALT_T(KC_LEFT),    RGUI_T(KC_DOWN),    RCTL_T(KC_RIGHT)),
 
     /* MAC
      * ,-----------------------------------------------------------------------------------------.
@@ -112,12 +108,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_WAKE, KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
         _______, RGB_TOG, RGB_MOD,  RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______,  _______,    _______,    _______,
         _______, BL_DEC,  BL_TOGG,  BL_INC,  BL_STEP, _______, _______, _______, _______, _______, _______,  _______,    _______,
-        _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______,     _______,
+        _______, WIN, MAC,  _______, _______, _______, _______, _______, _______, _______, _______,     _______,
         _______, _______, _______,                      _______,                    _______,     _______,       _______,             _______),
 
         /* CONFIG (NAVMED + LEDS)
      * ,-----------------------------------------------------------------------------------------.
-     * |     |     |     |     |     |     |     |     |     |     |      |       |      | Reset |
+     * |EEPROM|    |     |     |     |     |     |     |     |     |      |       |      | Reset |
      * |-----------------------------------------------------------------------------------------+
      * |        |     | Win |     |     |     |     |     |     |     |     |     |     |        |
      * |-----------------------------------------------------------------------------------------+
@@ -130,7 +126,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
 
     [_CONFIG] = LAYOUT_60_ansi(
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,
+        EEPROM, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RESET,
         _______, _______, WIN,     _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         _______, MAC,     _______, _______, _______, _______, _______, _______, _______, _______, _______,  _______,    _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,     _______,
@@ -140,18 +136,20 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void keyboard_post_init_user(void) {
     debug_enable = true;
-    debug_matrix = true;
+    debug_matrix = false;
 
     #ifdef RBGLIGHT_ENABLE
         rgblight_enable_noeeprom();
         switch (biton32(eeconfig_read_default_layer())) {
             case _WIN:
-                rgblight_sethsv_noeeprom(255, 255, 0): // sets the color to yellow without saving
+                dprint("Win layer start \n \n");
+                rgblight_sethsv_noeeprom(255, 0, 255): // sets the color to yellow without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); //
                 break;
 
             case _MAC:
-                rgblight_sethsv_noeeprom(97, 205, 227): // sets the color to teal/cyan without saving
+                dprint("Mac layer start \n \n");
+                rgblight_sethsv_noeeprom(190, 255, 255): // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); //
                 break;
 
@@ -167,6 +165,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     {
         case WIN:
             if (record->event.pressed) {
+                dprint("Win ACT \n \n");
                 set_single_persistent_default_layer(_WIN);
             }
             return false;
@@ -174,6 +173,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case MAC:
             if (record->event.pressed) {
+                dprint("Mac ACT \n \n");
                 set_single_persistent_default_layer(_MAC);
             }
             return false;
@@ -181,22 +181,36 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
         case NAVM:
             if (record->event.pressed) {
+                dprint("NAVM ACT \n \n");
                 layer_on(_NAVM);
                 update_tri_layer(_NAVM, _LEDS, _CONFIG);
             } else  {
+                dprint("NAVM DEAC \n \n");
                 layer_off(_NAVM);
                 update_tri_layer(_NAVM, _LEDS, _CONFIG);
             }
             return false;
             break;
 
-         case LEDS:
+        case LEDS:
             if (record->event.pressed) {
+                dprint("LED ACT \n");
                 layer_on(_LEDS);
                 update_tri_layer(_NAVM, _LEDS, _CONFIG);
             } else  {
+                dprint("LED DEAC \n");
                 layer_off(_LEDS);
                 update_tri_layer(_NAVM, _LEDS, _CONFIG);
+            }
+            return false;
+            break;
+
+        case EEPROM:
+            if (record->event.pressed) {
+                dprint("EEPROM ACT \n");
+                eeconfig_init();
+            } else  {
+                dprint("EEPROM DEAC \n");
             }
             return false;
             break;
@@ -210,30 +224,37 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 uint32_t layer_state_set_user(uint32_t state) {
     #ifdef RGBLIGHT_ENABLE
         switch (biton32(state)) {
-            case _WIN:
-                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(255, 255, 0); // sets the color to yellow without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
-                break;
-
-            case _MAC:
-                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(93, 205, 227); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
-                break;
-
             case _NAVM:
-                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_sethsv_noeeprom(93, 205, 227); // sets the color to teal/cyan without saving
+                dprint("\n \n Changed to NAVM layer \n \n");
+                rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE); // sets mode to Fast breathing without saving
                 break;
 
             case _LEDS:
-                rgblight_enable_noeeprom(); // enables Rgb, without saving settings
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_RAINBOW_SWIRL + 5); // sets mode to Fast breathing without saving
+                dprint("\n \n Changed to LED layer \n \n");
+                rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); // sets mode to Fast breathing without saving
+                break;
+
+            case _CONFIG:
+                dprint("\n \n Changed to CONFIG layer \n \n");
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_CHRISTMAS);
                 break;
 
             default:
+                switch(biton32(default_layer_state)) {
+                    case _WIN:
+                        dprint("\n \n Changed to WIN layer \n \n");
+                        rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
+                        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                        break;
+
+                    case _MAC:
+                        dprint("\n \n Changed to MAC layer \n \n");
+                        rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
+                        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                        break;
+                }
                 break;
         }
     #endif // RGBLIGHT_ENABLE
