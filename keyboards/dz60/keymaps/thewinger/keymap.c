@@ -44,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
         LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
         KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,            RSFT_T(KC_UP),
-        KC_LCTL,  KC_LGUI,  KC_LALT,                     KC_SPC,                    RALT_T(KC_LEFT),    RGUI_T(KC_DOWN),    LEDS,    RCTL_T(KC_RIGHT)),
+        KC_LCTL,  KC_LGUI,  KC_LALT,                     KC_SPC,                    KC_RALT,    RGUI_T(KC_LEFT),    LT(_LEDS, KC_DOWN),    RCTL_T(KC_RIGHT)),
 
     /* MAC
      * ,-----------------------------------------------------------------------------------------.
@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
         LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
         KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,        RSFT_T(KC_UP),
-        KC_LCTL,  KC_LALT,  KC_LGUI,                     KC_SPC,                    LEDS,     RGUI_T(KC_LEFT),    RALT_T(KC_DOWN),    RCTL_T(KC_RIGHT)),
+        KC_LCTL,  KC_LALT,  KC_LGUI,                     KC_SPC,                    KC_RGUI,    RALT_T(KC_LEFT),     LT(_LEDS, KC_DOWN),  RCTL_T(KC_RIGHT)),
 
 
      /* NAVMEDIA
@@ -104,7 +104,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      */
 
     [_LEDS] = LAYOUT_60_ansi(
-        KC_WAKE, KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
+        RESET, KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
         _______, RGB_TOG, RGB_MOD,  RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______,  _______,    _______,    _______,
         _______, BL_DEC,  BL_TOGG,  BL_INC,  BL_STEP, _______, _______, _______, _______, _______, _______,  _______,    _______,
         _______, WIN, MAC,  _______, _______, _______, _______, _______, _______, _______, _______,     _______,
@@ -138,18 +138,15 @@ void keyboard_post_init_user(void) {
     debug_matrix = false;
 
     #ifdef RBGLIGHT_ENABLE
-        rgblight_enable_noeeprom();
-         switch (biton32(eeconfig_read_default_layer())) {
-            case _WIN:
-                rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving/
-                break;
+        // Read the user config from EEPROM
+/*         user_config.raw = eeconfig_read_user();
 
-            case _MAC:
-                rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
-                break;
-         }
+        // Set default layer, if enabled
+        if (user_config.rgb_layer_change) {
+            rgblight_enable_noeeprom();
+            rgblight_sethsv_noeeprom_cyan();
+            rgblight_mode_noeeprom(1);
+        } */
     #endif
 }
 
@@ -171,7 +168,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
             break;
 
-        case NAVM:
+/*         case NAVM:
             if (record->event.pressed) {
                 layer_on(_NAVM);
                 update_tri_layer(_NAVM, _LEDS, _CONFIG);
@@ -191,7 +188,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 update_tri_layer(_NAVM, _LEDS, _CONFIG);
             }
             return false;
-            break;
+            break; */
 
        default:
             break;
@@ -230,6 +227,7 @@ uint32_t layer_state_set_user(uint32_t state) {
                 }
                 break;
         }
-    #endif // RGBLIGHT_ENABLE
+    #endif// RGBLIGHT_ENABLE
+    state = update_tri_layer_state(state, _NAVM, _LEDS, _CONFIG);
     return state;
 }
