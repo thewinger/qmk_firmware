@@ -138,15 +138,18 @@ void keyboard_post_init_user(void) {
     debug_matrix = false;
 
     #ifdef RBGLIGHT_ENABLE
-        // Read the user config from EEPROM
-/*         user_config.raw = eeconfig_read_user();
+        switch(biton32(default_layer_state)) {
+            case _WIN:
+                rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                break;
 
-        // Set default layer, if enabled
-        if (user_config.rgb_layer_change) {
-            rgblight_enable_noeeprom();
-            rgblight_sethsv_noeeprom_cyan();
-            rgblight_mode_noeeprom(1);
-        } */
+            case _MAC:
+                rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
+                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                break;
+            }
+
     #endif
 }
 
