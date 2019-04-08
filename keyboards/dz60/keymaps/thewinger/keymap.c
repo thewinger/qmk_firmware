@@ -6,10 +6,12 @@
  */
 
 #include QMK_KEYBOARD_H
+#include "print.h"
+#include "keymap_extras/keymap_spanish.h"
 
 enum layers {
-  _WIN,
   _MAC,
+  _WIN,
   _NAVM,
   _LEDS,
   _CONFIG
@@ -17,34 +19,10 @@ enum layers {
 
 enum keycodes {
     WIN = SAFE_RANGE,
-    MAC,
-    NAVM,
-    LEDS,
-    EEPROM
+    MAC
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
-    /* WIN
-     * ,-----------------------------------------------------------------------------------------.
-     * | Esc |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  0  |  -  |  =  |   Bkspc   |
-     * |-----------------------------------------------------------------------------------------+
-     * | Tab    |  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |  [  |  ]  |   \    |
-     * |-----------------------------------------------------------------------------------------+
-     * | Caps     |  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |  '  |    Enter   |
-     * |-----------------------------------------------------------------------------------------+
-     * | Shift     |  Z  |  X  |  C  |  V  |  B  |  N  |  M  |  ,  |  .  |  /  |     Shift       |
-     * |-----------------------------------------------------------------------------------------+
-     * | Ctrl | Gui  | Alt  |              Space                   | Alt |  Gui  |  Leds  | Ctrl |
-     * `-----------------------------------------------------------------------------------------'
-     */
-
-    [_WIN] = LAYOUT_60_ansi(
-        KC_GESC,            KC_1,   KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,       KC_9,   KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,
-        KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
-        LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
-        KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,            RSFT_T(KC_UP),
-        KC_LCTL,  KC_LGUI,  KC_LALT,                     KC_SPC,                    KC_RALT,    RGUI_T(KC_LEFT),    LT(_LEDS, KC_DOWN),    RCTL_T(KC_RIGHT)),
 
     /* MAC
      * ,-----------------------------------------------------------------------------------------.
@@ -66,6 +44,28 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
         KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,        RSFT_T(KC_UP),
         KC_LCTL,  KC_LALT,  KC_LGUI,                     KC_SPC,                    KC_RGUI,    RALT_T(KC_LEFT),     LT(_LEDS, KC_DOWN),  RCTL_T(KC_RIGHT)),
+
+
+    /* WIN
+     * ,-----------------------------------------------------------------------------------------.
+     * | Esc |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  9  |  0  |  -  |  =  |   Bkspc   |
+     * |-----------------------------------------------------------------------------------------+
+     * | Tab    |  Q  |  W  |  E  |  R  |  T  |  Y  |  U  |  I  |  O  |  P  |  [  |  ]  |   \    |
+     * |-----------------------------------------------------------------------------------------+
+     * | Caps     |  A  |  S  |  D  |  F  |  G  |  H  |  J  |  K  |  L  |  ;  |  '  |    Enter   |
+     * |-----------------------------------------------------------------------------------------+
+     * | Shift     |  Z  |  X  |  C  |  V  |  B  |  N  |  M  |  ,  |  .  |  /  |     Shift       |
+     * |-----------------------------------------------------------------------------------------+
+     * | Ctrl | Gui  | Alt  |              Space                   | Alt |  Gui  |  Leds  | Ctrl |
+     * `-----------------------------------------------------------------------------------------'
+     */
+
+    [_WIN] = LAYOUT_60_ansi(
+        KC_GESC,            KC_1,   KC_2,   KC_3,   KC_4,   KC_5,   KC_6,   KC_7,   KC_8,       KC_9,   KC_0,       KC_MINS,    KC_EQL,     KC_BSPC,
+        KC_TAB,             KC_Q,   KC_W,   KC_E,   KC_R,   KC_T,   KC_Y,   KC_U,   KC_I,       KC_O,   KC_P,       KC_LBRC,    KC_RBRC,    KC_BSLS,
+        LT(_NAVM, KC_CAPS), KC_A,   KC_S,   KC_D,   KC_F,   KC_G,   KC_H,   KC_J,   KC_K,       KC_L,   KC_SCLN,    KC_QUOT,    KC_ENT,
+        KC_LSFT,            KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,   KC_N,   KC_M,   KC_COMM,    KC_DOT, KC_SLSH,            RSFT_T(KC_UP),
+        KC_LCTL,  KC_LGUI,  KC_LALT,                     KC_SPC,                    KC_RALT,    RGUI_T(KC_LEFT),    LT(_LEDS, KC_DOWN),    RCTL_T(KC_RIGHT)),
 
 
      /* NAVMEDIA
@@ -112,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
         /* CONFIG (NAVMED + LEDS)
      * ,-----------------------------------------------------------------------------------------.
-     * |EEPROM|    |     |     |     |     |     |     |     |     |      |       |      | Reset |
+     * |      |    |     |     |     |     |     |     |     |     |      |       |      | Reset |
      * |-----------------------------------------------------------------------------------------+
      * |        |     | Win |     |     |     |     |     |     |     |     |     |     |        |
      * |-----------------------------------------------------------------------------------------+
@@ -133,24 +133,24 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 };
 
+void matrix_init_user(void) {
+
+}
+
 void keyboard_post_init_user(void) {
     debug_enable = true;
     debug_matrix = false;
+                switch(biton32(default_layer_state)) {
+                    case _WIN:
+                        rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
+                        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                        break;
 
-    #ifdef RBGLIGHT_ENABLE
-        switch(biton32(default_layer_state)) {
-            case _WIN:
-                rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
-                break;
-
-            case _MAC:
-                rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
-                rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
-                break;
-            }
-
-    #endif
+                    case _MAC:
+                        rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
+                        rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
+                        break;
+                }
 }
 
 // switch layers depending on keypressed, with persistent layer in the mix
@@ -200,16 +200,19 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 
 uint32_t layer_state_set_user(uint32_t state) {
+    state = update_tri_layer_state(state, _NAVM, _LEDS, _CONFIG);
     #ifdef RGBLIGHT_ENABLE
         switch (biton32(state)) {
             case _NAVM:
                 rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_SNAKE); // sets mode to Fast breathing without saving
+
                 break;
 
             case _LEDS:
                 rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3); // sets mode to Fast breathing without saving
+                state = update_tri_layer_state(state, _NAVM, _LEDS, _CONFIG);
                 break;
 
             case _CONFIG:
@@ -231,6 +234,6 @@ uint32_t layer_state_set_user(uint32_t state) {
                 break;
         }
     #endif// RGBLIGHT_ENABLE
-    state = update_tri_layer_state(state, _NAVM, _LEDS, _CONFIG);
+
     return state;
 }
