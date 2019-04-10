@@ -186,7 +186,7 @@ uint32_t layer_state_set_user(uint32_t state) {
             case _NAVM:
                 rgblight_sethsv_noeeprom_cyan(); // sets the color to teal/cyan without saving
                 rgblight_mode_noeeprom(RGBLIGHT_MODE_KNIGHT + 1); // sets mode to Fast breathing without saving
-
+                state = update_tri_layer_state(state, _NAVM, _LEDS, _CONFIG);
                 break;
 
             case _LEDS:
