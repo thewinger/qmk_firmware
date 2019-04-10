@@ -8,7 +8,6 @@
 #include QMK_KEYBOARD_H
 #include "print.h"
 
-
 enum layers {
   _MAC,
   _WIN,
@@ -23,6 +22,9 @@ enum keycodes {
 };
 
 #define KC_CAD LCTL(LALT(KC_DEL))
+
+static bool control_disabled = false;
+static bool delete_pressed = false;
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -173,9 +175,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
             break;
 
-       default:
+        default:
             break;
     }
+  if(keycode == KC_BSPC) {
+    if (record->event.pressed) {
+      if(keyboard_report->mods & MOD_BIT(KC_LCTL)) {
+        delete_pressed = true;
+        control_disabled = true;
+        unregister_code(KC_LCTL);
+        register_code(KC_DEL);
+        return false;
+      }
+    } else if(delete_pressed) {
+      delete_pressed = false;
+      unregister_code(KC_DEL);
+
+      if(control_disabled) {
+        control_disabled = false;
+        register_code(KC_LCTL);
+      }
+      return false;
+    }
+  } else if(keycode == KC_LCTL && !record->event.pressed && delete_pressed) {
+    delete_pressed = false;
+    control_disabled = false;
+    unregister_code(KC_DEL);
+    register_code(KC_BSPC);
+    return false;
+  }
     return true;
 }
 
