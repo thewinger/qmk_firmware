@@ -109,8 +109,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_LEDS] = LAYOUT_60_ansi(
         KC_GESC, KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
-        _______, RGB_TOG, RGB_MOD,  RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______,  _______,    _______,    _______,
-        _______, BL_DEC,  BL_TOGG,  BL_INC,  BL_STEP, _______, _______, _______, _______, _______, _______,  _______,    _______,
+        _______, RGB_TOG, RGB_MOD,  RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______,  KC_MRWD,   KC_MFFD,    KC_MPLY,
+        _______, BL_DEC,  BL_TOGG,  BL_INC,  BL_STEP, _______, _______, _______, _______, _______, KC_VOLD,  KC_VOLU,    KC_MUTE,
         _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______,     _______,
         _______, _______, _______,                      _______,                    _______,     _______,       _______,             _______),
 
@@ -174,36 +174,40 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return false;
             break;
+        case KC_BSPC:
+            if (record->event.pressed) {
+                if(keyboard_report->mods & MOD_BIT(KC_LCTL)) {
+                    delete_pressed = true;
+                    control_disabled = true;
+                    unregister_code(KC_LCTL);
+                    register_code(KC_DEL);
+                    return false;
+                }
+            } else if(delete_pressed) {
+                delete_pressed = false;
+                unregister_code(KC_DEL);
 
+                if(control_disabled) {
+                    control_disabled = false;
+                    register_code(KC_LCTL);
+                }
+                return false;
+            }
+            break;
+        case KC_LCTL:
+            if (!record->event.pressed) {
+                if (delete_pressed) {
+                    delete_pressed = false;
+                    control_disabled = false;
+                    unregister_code(KC_DEL);
+                    register_code(KC_BSPC);
+                    return false;
+                }
+            }
+            break;
         default:
             break;
     }
-  if(keycode == KC_BSPC) {
-    if (record->event.pressed) {
-      if(keyboard_report->mods & MOD_BIT(KC_LCTL)) {
-        delete_pressed = true;
-        control_disabled = true;
-        unregister_code(KC_LCTL);
-        register_code(KC_DEL);
-        return false;
-      }
-    } else if(delete_pressed) {
-      delete_pressed = false;
-      unregister_code(KC_DEL);
-
-      if(control_disabled) {
-        control_disabled = false;
-        register_code(KC_LCTL);
-      }
-      return false;
-    }
-  } else if(keycode == KC_LCTL && !record->event.pressed && delete_pressed) {
-    delete_pressed = false;
-    control_disabled = false;
-    unregister_code(KC_DEL);
-    register_code(KC_BSPC);
-    return false;
-  }
     return true;
 }
 
