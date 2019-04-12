@@ -18,7 +18,8 @@ enum layers {
 
 enum keycodes {
     WIN = SAFE_RANGE,
-    MAC
+    MAC,
+    M_NTILD
 };
 
 #define KC_CAD LCTL(LALT(KC_DEL))
@@ -80,7 +81,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |-----------------------------------------------------------------------------------------+
      * |          |  Lf |  Dw |  Rg |     |     |     |     |     |     |  V- | V+  |    Mute    |
      * |-----------------------------------------------------------------------------------------+
-     * |           |     |     |     |     |     |     |     |     |     |     |                 |
+     * |           |     |     |     |     |     |  ñ  |     |     |     |     |                 |
      * |-----------------------------------------------------------------------------------------+
      * |      |      |      |                                      |       |      |       |      |
      * `-----------------------------------------------------------------------------------------'
@@ -90,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GESC, KC_F1,   KC_F2,    KC_F3,      KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
         KC_CAD, _______, KC_UP,    _______,    _______, _______, _______, _______, _______, _______, _______,  KC_MRWD,   KC_MFFD,    KC_MPLY,
         _______, KC_LEFT, KC_DOWN,  KC_RIGHT,   _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_VOLD,  KC_VOLU,    KC_MUTE,
-        _______, _______, _______,  _______,    _______, _______, _______, _______, _______, _______, _______,  _______,
+        _______, _______, _______,  _______,    _______, _______, M_NTILD, _______, _______, _______, _______,  _______,
         _______, _______, _______,                      _______,                    _______, _______,           _______,                _______),
 
     /* LEDS
@@ -111,7 +112,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GESC, KC_F1,   KC_F2,    KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
         _______, RGB_TOG, RGB_MOD,  RGB_HUI, RGB_HUD, RGB_SAI, RGB_SAD, RGB_VAI, RGB_VAD, _______, _______,  KC_MRWD,   KC_MFFD,    KC_MPLY,
         _______, BL_DEC,  BL_TOGG,  BL_INC,  BL_STEP, _______, _______, _______, _______, _______, KC_VOLD,  KC_VOLU,    KC_MUTE,
-        _______, _______, _______,  _______, _______, _______, _______, _______, _______, _______, _______,     _______,
+        _______, _______, _______,  _______, _______, _______, M_NTILD, _______, _______, _______, _______,     _______,
         _______, _______, _______,                      _______,                    _______,     _______,       _______,             _______),
 
         /* CONFIG (NAVMED + LEDS)
@@ -171,6 +172,24 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MAC:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_MAC);
+            }
+            return false;
+            break;
+        case M_NTILD:
+            if (record->event.pressed) {
+                if(keyboard_report->mods & MOD_BIT(KC_LSFT)) {
+                    register_code (KC_LSFT);
+                    register_code (KC_GRV);
+                    unregister_code (KC_GRV);
+                    tap_code(KC_N);
+                    unregister_code (KC_LSFT);
+                } else {
+                    register_code (KC_LSFT);
+                    register_code (KC_GRV);
+                    unregister_code (KC_GRV);
+                    unregister_code (KC_LSFT);
+                    tap_code(KC_N);
+                }
             }
             return false;
             break;
