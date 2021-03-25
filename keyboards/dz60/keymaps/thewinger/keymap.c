@@ -77,7 +77,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,-----------------------------------------------------------------------------------------.
      * | Esc | F1  | F2  | F3  | F4  | F5  | F6  | F7  | F8  | F9  | F10  |  F11  | F12  |  Del  |
      * |-----------------------------------------------------------------------------------------+
-     * |KC_CAD|     |  Up |     |     |     |     |     |     |     |     |  T- |  T+ |  Play  |
+     * |KC_CAD|     |  Up |     |     |     |     |     |     |     |  PRSR |  T- |  T+ |  Play  |
      * |-----------------------------------------------------------------------------------------+
      * |          |  Lf |  Dw |  Rg |     |     |     |     |     |     |  V- | V+  |    Mute    |
      * |-----------------------------------------------------------------------------------------+
@@ -89,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_NAVM] = LAYOUT_60_ansi(
         KC_ESC, KC_F1,   KC_F2,    KC_F3,      KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,   KC_F11,     KC_F12,     KC_DEL,
-        KC_CAD, _______, KC_UP,    _______,    _______, _______, _______, _______, _______, _______, _______,  KC_MRWD,   KC_MFFD,    KC_MPLY,
+        KC_CAD, _______, KC_UP,    _______,    _______, _______, _______, _______, _______, _______, KC_PSCR,  KC_MRWD,   KC_MFFD,    KC_MPLY,
         _______, KC_LEFT, KC_DOWN,  KC_RIGHT,   _______, _______, KC_LEFT, KC_DOWN, KC_UP, KC_RIGHT, KC_VOLD,  KC_VOLU,    KC_MUTE,
         _______, _______, _______,  _______,    _______, _______, M_NTILD, _______, _______, _______, _______,  _______,
         _______, _______, _______,                      _______,                    _______, _______,           _______,                _______),
@@ -147,7 +147,7 @@ void keyboard_post_init_user(void) {
     debug_matrix = false;
     switch(biton32(default_layer_state)) {
         case _WIN:
-            rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
+            rgblight_sethsv_noeeprom_white(); // sets the color to white without saving
             rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
             break;
 
@@ -253,7 +253,7 @@ uint32_t layer_state_set_user(uint32_t state) {
             default:
                 switch(biton32(default_layer_state)) {
                     case _WIN:
-                        rgblight_sethsv_noeeprom_white(); // sets the color to yellow without saving
+                        rgblight_sethsv_noeeprom_white(); // sets the color to white without saving
                         rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT); // sets mode to Fast breathing without saving
                         break;
 
